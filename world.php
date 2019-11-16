@@ -7,7 +7,7 @@ $country=$_GET['country'];
 
 $conn = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $username, $password);
 $stmt = $conn->query("SELECT * FROM countries WHERE name LIKE '%$country%';");
-$joiner=$conn->query("SELECT");
+$joiner=$conn->query("SELECT c.district,c.name as city, c.country_code, cs.name as country, c.population FROM cities c join countries cs on c.country_code = cs.code");
 $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 $result2 = $joiner->fetchAll(PDO::FETCH_ASSOC);
 
@@ -24,7 +24,7 @@ $result2 = $joiner->fetchAll(PDO::FETCH_ASSOC);
   <tr><td><?= $row['name'] ?></td><td><?= $row['continent'] ?></td><td><?= $row['independence_year'] ?></td><td><?= $row['head_of_state'] ?></td></tr>
 <?php endforeach;}?>
 </table>
-<?php if((isset($_GET['context']))){?>
+<?php if($_GET['context']=="cities"){?>
 <table>
     <tr>
         <th>Name</th>
@@ -32,7 +32,7 @@ $result2 = $joiner->fetchAll(PDO::FETCH_ASSOC);
         <th>Population</th>
     </tr>
 <?php foreach ($result2 as $row): ?>
-<?php if($row["name"]==$country){?>
-  <tr><td><?= $row['name'] ?></td><td><?= $row['district'] ?></td><td><?= $row['population'] ?></td><td><?= $row['head_of_state'] ?></td></tr>
+<?php if($row["country"]==$country && $country!=" "){?>
+  <tr><td><?= $row['city'] ?></td><td><?= $row['district'] ?></td><td><?= $row['population'] ?></td><td><?= $row['head_of_state'] ?></td></tr>
 <?php }endforeach;}?>
 </table>
